@@ -1,22 +1,28 @@
 const { response } = require('express');
 const userGet = (req, res = response) => {
+    const {q, name, apikey} = req.query;
     res.json({
         ok: true,
-        msg: 'get api from controller'
+        msg: 'get api from controller',
+        q: q,
+        name: name,
+        apikey: apikey
     });
     console.log('send from api');
 }
 
 const userPost = (req, res = response) => {
+    const body = req.body;
     res.json({
         ok: true,
-        msg: 'post api from controller'
+        body: body
     })
 }
 const userPut = (req, res = response) => {
+    const id = req.params.id;
     res.json({
-        ok: true,
-        msg: 'put api from controller'
+        msg: 'put api from controller',
+        id: id
     })
 }
 const userPatch = (req, res = response) => {

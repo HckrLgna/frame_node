@@ -13,6 +13,8 @@ class Server{
 
         this.app.use(cors());
         //directory public 
+
+        this.app.use(express.json());
         this.app.use(express.static('public'));
     }
     routes(){
