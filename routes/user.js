@@ -13,10 +13,10 @@ router.get('/ ', (req, res) => {
 });
 router.get('/', userGet );
 router.post('/', [
-    check('name', 'Name is required').not().isEmpty(),
+    check('name', 'Name is required').not().isEmpty(), //use xpress validator
     check('email', 'Email is required').isEmail(),
     check('password', 'Password is required').not().isEmpty().isLength({min: 6}),
-    check('role', 'Role is required').isIn(['ADMIN_ROLE', 'USER_ROLE']),
+    //check('role', 'Role is required').isIn(['ADMIN_ROLE', 'USER_ROLE']),
     checkFields
 ],userPost );
 router.put('/:id', userPut );
