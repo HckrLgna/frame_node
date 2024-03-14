@@ -4,7 +4,7 @@ const { Router } = require('express');
 const { userGet, userPost, userPut, userPatch, userDelete } = require('../controllers/user');
 const { check } = require('express-validator');
 const { checkFields } = require('../middleware/validar_campos');
-const Role = require('../models/role');
+const { isValidRole, isEmailValid , isUserExistById} = require('../helpers/db_validators');
 const router = Router();
 
 
@@ -16,17 +16,18 @@ router.get('/', userGet );
 router.post('/', [
     check('name', 'Name is required').not().isEmpty(), //use xpress validator
     check('email', 'Email is required').isEmail(),
+    check('email').custom( isEmailValid),
     check('password', 'Password is required').not().isEmpty().isLength({min: 6}),
     //check('role', 'Role is required').isIn(['ADMIN_ROLE', 'USER_ROLE']),
-    check('role').custom( async( rol = '') =>{
-       const existRole = await Role.findOne({rol});
-       if(!existRole){
-           throw new Error(`Role ${rol} is not registered in the database`);
-       }
-    }),
+    check('role').custom( isValidRole),
     checkFields
 ],userPost );
-router.put('/:id', userPut );
+router.put('/:id',[
+    check('id', 'is not a valid ID').isMongoId(),
+    check('id').custom( isUserExistById ),
+    check('role').custom( isValidRole),
+    checkFields
+], userPut );
 router.patch('/', userPatch);
 router.delete('/', userDelete);
 
