@@ -2,16 +2,18 @@ const { response } = require('express');
 const bcryptjs = require('bcryptjs');
 const User = require('../models/user');
 
-const userGet = (req, res = response) => {
-    const {q, name, apikey} = req.query;
+const userGet = async(req, res = response) => {
+    const { limit = 5, from = 0} = req.query;
+    const query = { state : true}
+    const users = await User.find(query)
+        .skip(Number(from))
+        .limit(Number(limit)) 
+
+    const total = await User.countDocuments(query);
     res.json({
-        ok: true,
-        msg: 'get api from controller',
-        q: q,
-        name: name,
-        apikey: apikey
+        total,
+        users
     });
-    console.log('send from api');
 }
 
 const userPost = async(req, res = response) => {
@@ -39,10 +41,7 @@ const userPut = async (req, res = response) => {
         resto.password = bcryptjs.hashSync(password, salt);
     }
     const user = await User.findByIdAndUpdate(id, resto);
-    res.json({
-        msg: 'put api from controller',
-        user
-    })
+    res.json(user)
 }
 const userPatch = (req, res = response) => {
     res.json({
