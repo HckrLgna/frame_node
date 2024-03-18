@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const Role = require('../models/role');
 const User = require('../models/user');
 
